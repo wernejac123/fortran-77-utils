@@ -1,0 +1,49 @@
+C FORTRAN 77 PROGRAM TO CALCULATE HOW MANY DISKS ARE NEEDED C (CD 6540MB, CD 700MB, DVD 4.7GB)
+
+      PROGRAM DISK
+      IMPLICIT NONE
+      CHARACTER CIN,UNIT
+      DOUBLEPRECISION DSKSZ,COUNT
+C DISK SIZE
+
+C GET DISK SIZE
+10    WRITE(*,*) 'DISK SIZE'
+      WRITE(*,*) '''1'' CD 650MB'
+      WRITE(*,*) '''2'' CD 700MB'
+      WRITE(*,*) '''3'' DVD 4.7G'
+      READ(*,*) CIN
+
+      IF(CIN .EQ. '1') THEN
+        DSKSZ=650.0
+      ELSEIF(CIN .EQ. '2') THEN
+        DSKSZ=700.0
+      ELSEIF(CIN .EQ. '3') THEN
+        DSKSZ=4.7*1024.0
+      ELSE
+        WRITE(*,*) 'INVALID'
+        GOTO 10
+      ENDIF     
+ 
+C GET UNIT AND COUNT
+      WRITE(*,*) 'UNIT,COUNT'
+      READ(*,*) UNIT,COUNT
+
+      IF(UNIT .EQ. 'B') THEN
+        WRITE(*,900) (COUNT * (1.0/1024.0**2))/DSKSZ
+      ELSEIF(UNIT .EQ. 'K') THEN
+        WRITE(*,900) (COUNT * (1.0/1024.0))/DSKSZ
+      ELSEIF(UNIT .EQ. 'M') THEN
+        WRITE(*,900) COUNT/DSKSZ
+      ELSEIF(UNIT .EQ. 'G') THEN
+        WRITE(*,900) (1024.0*COUNT)/DSKSZ
+      ELSEIF(UNIT .EQ. 'T') THEN
+        WRITE(*,900) (1024.0**2*COUNT)/DSKSZ
+      ELSE
+        WRITE(*,*) 'INVALID'
+        GOTO 999
+      ENDIF
+      WRITE(*,*) '(ROUND ALL DECIMALS UP TO NEAREST WHOLE NUMBER)'
+
+900   FORMAT(F8.2,' DISKS')
+999   STOP
+      END 
