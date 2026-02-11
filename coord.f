@@ -1,39 +1,47 @@
 C FORTRAN 77 PROGRAM CONVERT BETWEEN RECTANGULAR COORDINATES AND POLAR
 C COORDINATES
+
+C UPDATE USED COMPUTED GOTO 
+C CHANGED CHARACTER CIN TO INTEGER IN
+
       PROGRAM COORD
       IMPLICIT NONE
-      CHARACTER CIN
+      INTEGER IN
       DOUBLEPRECISION X,Y,A,R,PI
       PARAMETER(PI=3.141592654)
 C A IS ANGLE
 
-10    WRITE(*,*) '''1'' RECTANGULAR TO POLAR'
-      WRITE(*,*) '''2'' POLAR TO RECTANGULAR'
-      READ(*,*) CIN
+10    WRITE(*,*) '1 RECTANGULAR TO POLAR'
+      WRITE(*,*) '2 POLAR TO RECTANGULAR'
+      READ(*,*) IN
 
-      IF(CIN .EQ. '1') THEN
-        WRITE(*,*) 'X,Y'
-        READ(*,*) X,Y
-        R=DSQRT(X**2+Y**2)
-        A=DATAN(Y/X)
+C COMPUTED GOTO
+C IF IN .EQ. 1 GOTO 20
+C IF IN .EQ. 2 GOTO 30
+C ELSE GOTO 10
+      GOTO(20,30) IN
+      GOTO 10
+20    CONTINUE
+      WRITE(*,*) 'X,Y'
+      READ(*,*) X,Y
+      R=DSQRT(X**2+Y**2)
+      A=DATAN(Y/X)
 
 C CONVERT A FROM RADIANS TO DEGRRES
-        A=A*(180.0/PI)
+      A=A*(180.0/PI)
 
-        WRITE(*,*) 'R=',R,'A=',A, ' DEGS'
-      ELSEIF(CIN .EQ. '2') THEN
-        WRITE(*,*) 'R,A (DEGS)'
-        READ(*,*) R,A
+      WRITE(*,*) 'R=',R,'A=',A, ' DEGS'
+      GOTO 999
+30    CONTINUE
+      WRITE(*,*) 'R,A (DEGS)'
+      READ(*,*) R,A
 
 C CONVERT A FROM DEGREES TO RADIANS
-        A=A*(PI/180.0)
+      A=A*(PI/180.0)
 
-        X=R*DCOS(A)
-        Y=R*DSIN(A)
-        WRITE(*,*) 'X=',X,'Y=',Y
-      ELSE
-        GOTO 10
-      ENDIF
+      X=R*DCOS(A)
+      Y=R*DSIN(A)
+      WRITE(*,*) 'X=',X,'Y=',Y
 
-      STOP
+999   STOP
       END
